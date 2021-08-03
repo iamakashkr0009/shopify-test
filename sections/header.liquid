@@ -1,6 +1,7 @@
 <div class="header-icons">
-<a href="https://facebook.com" class="btn--link site-header__icon head-icon-1">{% render 'icon-facebook' %}</a>
-<a href="https://instagram.com" class="btn--link site-header__icon head-icon-2">{% render 'icon-instagram' %}</a>
+  
+<!-- <a href="https://facebook.com" class="btn--link site-header__icon head-icon-1">{% render 'icon-facebook' %}</a>
+<a href="https://instagram.com" class="btn--link site-header__icon head-icon-2">{% render 'icon-instagram' %}</a> -->
 </div>
 
 {% if section.settings.message %}
@@ -116,6 +117,12 @@
       <div class="grid__item {% if section.settings.align_logo == 'left' %}medium-up--one-quarter{% else %}medium-up--one-third medium-up--push-one-third{% endif %} text-right site-header__icons{% if shop.customer_accounts_enabled %} site-header__icons--plus{% endif %}">
         <div class="site-header__icons-wrapper">
           
+            <button type="button" class="btn--link site-header__icon site-header__search-toggle js-drawer-open-top" data-predictive-search-open-drawer>
+            <img style="height:25px" src="https://img.icons8.com/windows/32/000000/like--v1.png"/>
+            <span class="icon__fallback-text">{{ 'layout.navigation.search' | t }}</span>
+          </button>
+
+          
           
 
           <button type="button" class="btn--link site-header__icon site-header__search-toggle js-drawer-open-top" data-predictive-search-open-drawer>
@@ -152,9 +159,12 @@
               {% include 'icon-close' %}
             </button>
           {% endunless %}
+          
+          <b>My Account >
         </div>
 
       </div>
+     
     </div>
 
     <nav class="mobile-nav-wrapper medium-up--hide critical-hidden" role="navigation">

@@ -2,34 +2,51 @@
 
   <div {% if cart.item_count == 0 %}class="hide" {% endif %}data-cart-wrapper>
     <div class="cart-header">
-      <h1 class="cart-header__title">{{ 'cart.general.title' | t }}</h1>
-      <a href="{{ routes.all_products_collection_url }}" class="text-link text-link--accent">
+      <h1 class="cart-header__title">Your Cart</h1>
+<!--       <a href="{{ routes.all_products_collection_url }}" class="text-link text-link--accent">
         {{ 'cart.general.continue_shopping' | t }}
-      </a>
+      </a> -->
     </div>
 
     <form action="{{ routes.cart_url }}" method="post" novalidate class="cart">
       <table>
-        <thead class="cart__row cart__row--heading">
+<!--         <thead class="cart__row cart__row--heading">
           <th scope="col">{{ 'cart.label.product' | t }}</th>
           <th class="text-right" scope="col">{{ 'cart.label.price' | t }}</th>
           <th class="text-right small--hide" scope="col">{{ 'cart.label.quantity' | t }}</th>
           <th class="text-right small--hide" scope="col">{{ 'cart.label.total' | t }}</th>
-        </thead>
+        </thead> -->
         <tbody data-cart-line-items>
           {%- for item in cart.items -%}
             <tr class="cart__row" data-cart-item data-cart-item-key="{{ item.key }}" data-cart-item-url="{{ item.url }}" data-cart-item-title="{{ item.title }}" data-cart-item-index="{{ forloop.index }}" data-cart-item-quantity="{{ item.quantity }}">
-              <td class="cart__meta small--text-left" data-cart-table-cell>
+<!--               <td class="cart__meta small--text-left" data-cart-table-cell> -->
                 <div class="cart__product-information">
                   <div class="cart__image-wrapper">
                     <img class="cart__image{% if item.image == null %} hide{% endif %}" src="{{ item | img_url: 'x190' }}" alt="{{ item.image.alt | escape }}" data-cart-item-image>
                   </div>
-                  <div>
+                 
+                  <div class="border-name">
                     <div class="list-view-item__title">
                       <a href="{{ item.url }}" class="cart__product-title" data-cart-item-title data-role="product-title">
                         {{ item.product.title }}
-                      </a>
+                        
+                        
+                          <div class="cart__qty">
+                  <label for="updates_large_{{ item.key }}" class="cart__qty-label" data-quantity-label-desktop>{{ 'cart.label.quantity' | t }}</label>
+                  <input id="updates_large_{{ item.key }}" class="cart__qty-input" type="number"
+                    name="updates[]" value="{{ item.quantity }}" min="0" pattern="[0-9]*"
+                    data-quantity-input data-quantity-item="{{ forloop.index }}" data-quantity-input-desktop data-role="product-quantity-desktop">
+                </div>
+                        
+                        
+                      </a>	
+                      
+                      
+                      
+                 
+
                     </div>
+                    
 
                     {%- assign variant_options = 'template ' | split: ' ' -%}
                     {%- if item.product.has_only_default_variant != true -%}
@@ -41,6 +58,8 @@
                       {%- for option in variant_options -%}
                         <li class="product-details__item product-details__item--variant-option{% if item.product.has_only_default_variant %} hide{% endif %}" data-cart-item-option>{{ option.name }}: {{ option.value }}</li>
                       {%- endfor -%}
+                      
+              
 
                       <li
                         class="product-details__item product-details__item--property
@@ -49,6 +68,14 @@
                       >
                         {{ item.selling_plan_allocation.selling_plan.name }}
                       </li>
+                       <div {% if hasDiscount %}class="hide" {% endif %}data-cart-item-regular-price-group>
+                      <dt>
+                        <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+                      </dt>
+                      <dd data-cart-item-regular-price>
+                        {{ item.original_price | money }}
+                      </dd>
+                    </div>
 
                       {%- comment -%}
                         Optional, loop through custom product line items if available
@@ -85,13 +112,13 @@
                       {%- endfor -%}
                     </ul>
 
-                    <p class="cart__remove">
+<!--                     <p class="cart__remove">
                       <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="text-link text-link--accent" aria-label="{{ 'cart.label.remove' | t: product: item.title }}" data-cart-remove data-role="product-remove">{{ 'cart.general.remove' | t }}</a>
-                    </p>
+                    </p> -->
                   </div>
                 </div>
-              </td>
-              <td class="cart__price text-right">
+<!--               </td>
+              <td class="cart__price text-right"> -->
 
                 {%- assign hasDiscount = false -%}
                 {%- if item.original_price != item.final_price -%}
@@ -121,15 +148,7 @@
                     {%- comment -%}
                       Markup template for regular price item
                     {%- endcomment -%}
-                    <div {% if hasDiscount %}class="hide" {% endif %}data-cart-item-regular-price-group>
-                      <dt>
-                        <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
-                      </dt>
-                      <dd data-cart-item-regular-price>
-                        {{ item.original_price | money }}
-                      </dd>
-                    </div>
-
+                   
                     {%- comment -%}
                       Markup template for unit price
                     {%- endcomment -%}
@@ -185,46 +204,8 @@
                   {% include 'icon-error' %}
                   <span class="cart__qty-error-message" data-cart-quantity-error-message></span>
                 </div>
-              </td>
-              <td class="cart__quantity-td text-right small--hide">
-                <div class="cart__qty">
-                  <label for="updates_large_{{ item.key }}" class="cart__qty-label" data-quantity-label-desktop>{{ 'cart.label.quantity' | t }}</label>
-                  <input id="updates_large_{{ item.key }}" class="cart__qty-input" type="number"
-                    name="updates[]" value="{{ item.quantity }}" min="0" pattern="[0-9]*"
-                    data-quantity-input data-quantity-item="{{ forloop.index }}" data-quantity-input-desktop data-role="product-quantity-desktop">
-                </div>
-                <div class="cart__qty-error-message-wrapper cart__qty-error-message-wrapper--desktop hide" role="alert" data-cart-quantity-error-message-wrapper>
-                  <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
-                  {% include 'icon-error' %}
-                  <span class="cart__qty-error-message" data-cart-quantity-error-message></span>
-                </div>
-              </td>
-              <td class="cart__final-price text-right small--hide" data-cart-item-line-price>
-                {%- comment -%}
-                  Markup template for discount item
-                {%- endcomment -%}
-                <dl {% unless item.original_line_price != item.final_line_price %}class="hide" {% endunless %}data-cart-item-discounted-price-group>
-                  <dt>
-                    <span class="visually-hidden">{{ 'cart.label.regular_total' | t }}</span>
-                  </dt>
-                  <dd>
-                    <s data-cart-item-original-price>{{ item.original_line_price | money }}</s>
-                  </dd>
-                  <dt>
-                    <span class="visually-hidden">{{ 'cart.label.discounted_total' | t }}</span>
-                  </dt>
-                  <dd>
-                    <span class="order-discount" data-cart-item-final-price>{{ item.final_line_price | money }}</span>
-                  </dd>
-                </dl >
+<!--               </td> -->
 
-                {%- comment -%}
-                  Markup template for regular price item
-                {%- endcomment -%}
-                <div {% if item.original_line_price != item.final_line_price %}class="hide" {% endif %}data-cart-item-regular-price-group>
-                  <span data-cart-item-regular-price>{{ item.original_line_price | money }}</span>
-                </div>
-              </td>
             </tr>
           {%- endfor -%}
         </tbody>
@@ -238,7 +219,7 @@
               <textarea name="note" id="CartSpecialInstructions" class="cart-note__input" data-cart-notes>{{ cart.note }}</textarea>
             </div>
           {%- endif -%}
-          <div class="grid__item text-right small--text-center{% if section.settings.cart_notes_enable %} medium-up--one-half{% endif %}">
+          <div class="grid__item2 text-right small--text-center{% if section.settings.cart_notes_enable %} medium-up--one-half{% endif %}">
 
             {%- assign cartDiscounts = 'template ' | split: ' ' -%}
             {%- if cart.cart_level_discount_applications.size > 0 -%}
@@ -256,9 +237,19 @@
                 {%- endfor -%}
               </div>
             </div>
-
+            <div class="Payment-summary1"><label>COUPON CODE</label></div>
+            <div class="cart-subtotal"><input id="inp" type="text" placeholder="Enter Coupon"><a href="#">Apply</a></input></div><br>
+            <div class="Payment-summary">PAYMENT SUMMARY</div><br>
             <div class="cart-subtotal">
-              <span class="cart-subtotal__title">{{ 'cart.general.subtotal' | t }}</span>
+            <span class="cart-subtotal__title"> Product Total</span> 
+              <span class="cart-subtotal__price" data-cart-subtotal>{{ cart.total_price | money_with_currency }}</span>
+            
+            
+            </div>
+
+            <div class="cart-subtotal"><br>
+              
+              <span class="cart-subtotal__title"> Net Payable</span>
               <span class="cart-subtotal__price" data-cart-subtotal>{{ cart.total_price | money_with_currency }}</span>
             </div>
 
@@ -273,7 +264,9 @@
                 {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
               {%- endif -%}
             {%- endcapture -%}
-            <div class="cart__shipping rte">{{ taxes_shipping_checkout }}</div>
+            
+            <br>
+            
             <div class="cart__buttons-container">
               <div class="cart__submit-controls">
                 {%- unless section.settings.cart_ajax_enable -%}
@@ -283,8 +276,10 @@
                 {%- endunless -%}
                 <input type="submit" name="checkout"
                   class="cart__submit btn btn--small-wide"
-                  value="{{ 'cart.general.checkout' | t }}">
+                  value="CONTINUE TO SHOPPING">
               </div>
+              <div style="font-size:12px"><p>FREE SHIPPING | 100% SECURE PAYMENT | 15 DAYS RETURN</p></div>
+              <a style="text-align:center" href=#>< Back</a>
 
               <div class="cart__error-message-wrapper hide" role="alert" data-cart-error-message-wrapper>
                 <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
